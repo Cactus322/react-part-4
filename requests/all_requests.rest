@@ -1,12 +1,9 @@
-DELETE  http://localhost:3001/api/persons/62c5b0172e4388572d01222casdasd
-
-###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "second saved blog",
-    "author": "empty",
-    "url": "https://www.google.com/",
-    "likes": 0
+    "title": "Go To Statement Considered Harmful",
+    "author": "Edsger W. Dijkstra",
+    "url": "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+    "likes": 5
 }

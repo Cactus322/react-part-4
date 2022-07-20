@@ -6,7 +6,7 @@ const logger = require('./utils/logger')
 const config = require('./utils/config')
 const blogRouter = require('./controllers/blogs')
 
-mongoose.connect(config.MONGODB_URL)
+mongoose.connect(config.MONGODB_URI)
     .then(() => {
         logger.info('connected to MongoDB')
     })
