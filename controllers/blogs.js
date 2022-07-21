@@ -18,7 +18,7 @@ blogsRouter.post('/', (request, response) => {
     }
 
     const blog = new Blog({
-        title: body.titile,
+        title: body.title,
         author: body.author,
         url: body.url,
         likes: body.likes || 0
@@ -27,6 +27,26 @@ blogsRouter.post('/', (request, response) => {
     blog
         .save().then((result) => {
             response.status(201).json(result)
+        })
+})
+
+blogsRouter.delete('/:id', (request, response) => {
+    Blog.findByIdAndRemove(request.params.id)
+        .then( () => {
+            response.status(204).end()
+        })
+})
+
+blogsRouter.put('/:id', (request, response) => {
+    const body = request.body
+
+    const blog = {
+        likes: body.likes
+    }
+
+    Blog.findByIdAndUpdate(request.params.id, blog)
+        .then(updateBlog => {
+            response.status(200).json(updateBlog)
         })
 })
 

@@ -7,3 +7,14 @@ Content-Type: application/json
     "url": "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
     "likes": 5
 }
+
+###
+DELETE  http://localhost:3003/api/blogs/62d005cdcf1e9481412a104a
+
+###
+PUT http://localhost:3003/api/blogs/62d0076b20e66d7e0accd7bb
+Content-Type: application/json
+
+{
+    "likes": 10
+}

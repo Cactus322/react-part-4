@@ -31,73 +31,115 @@ beforeEach(async () => {
     await blogObject.save()
 })
 
-test('blogs length', async () => {
-    const response = await api.get('/api/blogs')
-    expect(response.body).toHaveLength(2)
-})
+describe('other tests', () => {
+    test('blogs length', async () => {
+        const response = await api.get('/api/blogs')
+        expect(response.body).toHaveLength(2)
+    })
 
-test('blogs id', async () => {
-    const response = await api.get('/api/blogs')
-    response.body.forEach((e) => {
-        expect(e.id).toBeDefined()
+    test('blogs id', async () => {
+        const response = await api.get('/api/blogs')
+        response.body.forEach((e) => {
+            expect(e.id).toBeDefined()
+        })
     })
 })
 
-test('a valid blog can be added', async () => {
-    const newBlog = {
-        title: 'First class tests',
-        author: 'Robert C. Martin',
-        url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
-        likes: 10,
-    }
+describe('post valid', () => {
+    test('a valid blog can be added', async () => {
+        const newBlog = {
+            title: 'First class tests',
+            author: 'Robert C. Martin',
+            url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+            likes: 10,
+        }
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
 
-    const response = await api.get('/api/blogs')
+        const response = await api.get('/api/blogs')
 
-    const titles = response.body.map(r => r.title)
+        console.log(response.body)
 
-    expect(response.body).toHaveLength(initialBlogs.length + 1)
-    expect(titles).toContain(
-        'First class tests'
-    )
+        const titles = response.body.map(r => r.title)
+
+        expect(response.body).toHaveLength(initialBlogs.length + 1)
+        expect(titles).toContain(
+            'First class tests'
+        )
+    })
+
+    test('a valid likes', async () => {
+        const newBlog = {
+            title: 'First class tests',
+            author: 'Robert C. Martin',
+            url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll'
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const response = await api.get('/api/blogs')
+        const likes = response.body.map(r => r.likes)
+
+        expect(response.body).toHaveLength(initialBlogs.length + 1)
+        expect(likes).toBeDefined()
+    })
+
+    test('a invalid blog can not be added', async () => {
+        const newBlog = {
+            author: 'Robert C. Martin',
+            likes: 10
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+    })
 })
 
-test('a valid likes', async () => {
-    const newBlog = {
-        title: 'First class tests',
-        author: 'Robert C. Martin',
-        url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll'
-    }
+describe('deletion valid', () => {
+    test('succeeds delete', async () => {
+        const blogToDelete = initialBlogs[0]
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+        await api
+            .delete(`/api/blogs/${blogToDelete._id}`)
+            .expect(204)
 
-    const response = await api.get('/api/blogs')
-    const likes = response.body.map(r => r.likes)
+        const response = await api.get('/api/blogs')
 
-    expect(response.body).toHaveLength(initialBlogs.length + 1)
-    expect(likes).toBeDefined()
+        expect(response.body).toHaveLength(initialBlogs.length - 1)
+        expect(response.body).not.toContain(blogToDelete.title)
+    })
 })
 
-test('a invalid blog can not be adde', async () => {
-    const newBlog = {
-        author: 'Robert C. Martin',
-        likes: 10
-    }
+describe('updation valid', () => {
+    test('succeeds update', async () => {
+        const blogToUpdate = initialBlogs[0]
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
+        const updateBlog = {
+            likes: 3
+        }
+
+        await api
+            .put(`/api/blogs/${blogToUpdate._id}`)
+            .send(updateBlog)
+            .expect(200)
+
+        const response = await api.get('/api/blogs')
+        const likes = response.body.map(l => l.likes)
+
+        expect(response.body).toHaveLength(initialBlogs.length)
+        expect(likes[0]).toBe(3)
+    })
 })
 
 afterAll(() => {
