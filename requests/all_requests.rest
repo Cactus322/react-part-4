@@ -9,12 +9,22 @@ Content-Type: application/json
 }
 
 ###
-DELETE  http://localhost:3003/api/blogs/62d005cdcf1e9481412a104a
+DELETE  http://localhost:3003/api/blogs/62e036c9a58f2fb25819acea
 
 ###
-PUT http://localhost:3003/api/blogs/62d0076b20e66d7e0accd7bb
+PUT http://localhost:3003/api/blogs/62e038ebac97cb402e33530d
 Content-Type: application/json
 
 {
     "likes": 10
+}
+
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "Cactus322",
+    "name": "Gor",
+    "passwordHash": "Hobachki"
 }
