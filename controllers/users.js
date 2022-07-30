@@ -11,6 +11,25 @@ usersRouter.get('/', async (request, response) => {
 
 usersRouter.post('/', async (request, response) => {
     const { username, name, passwordHash } = request.body
+    let usernameIsTaken = false
+
+    const usernames = await User.find({})
+
+    usernames.forEach(e => {
+        if (e.username === username) {
+            usernameIsTaken = true
+        }
+    })
+
+    if (username.length < 3 || passwordHash.length < 3) {
+        return response.status(400).json({
+            error: 'content missing'
+        })
+    } else if (usernameIsTaken) {
+        return response.status(400).json({
+            error: 'username is taken'
+        })
+    }
 
     const saltRounds = 10
     const password = await bcrypt.hash(passwordHash, saltRounds)

@@ -62,8 +62,6 @@ describe('post valid', () => {
 
         const response = await api.get('/api/blogs')
 
-        console.log(response.body)
-
         const titles = response.body.map(r => r.title)
 
         expect(response.body).toHaveLength(initialBlogs.length + 1)
