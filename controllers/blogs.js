@@ -16,8 +16,6 @@ blogsRouter.post('/', async (request, response) => {
     const random = Math.floor(Math.random() * users.length)
     const randomUser = users[random]
 
-    console.log(users)
-
     if (!body.title || !body.url) {
         return response.status(400).json({
             error: 'content missing'

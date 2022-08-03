@@ -1,10 +1,11 @@
 const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/user')
+const Blog = require('../models/blog')
 
 usersRouter.get('/', async (request, response) => {
     const users = await User
-        .find({})
+        .find({}).populate('blogs')
 
     response.json(users)
 })
@@ -14,6 +15,10 @@ usersRouter.post('/', async (request, response) => {
     let usernameIsTaken = false
 
     const usernames = await User.find({})
+    const blogs = await Blog.find({})
+    const random = Math.floor(Math.random() * blogs.length)
+    const randomBlog = blogs[random]
+
 
     usernames.forEach(e => {
         if (e.username === username) {
@@ -37,7 +42,8 @@ usersRouter.post('/', async (request, response) => {
     const user = new User({
         username,
         name,
-        password
+        password,
+        blogs: randomBlog
     })
 
     const savedUser = await user.save()
