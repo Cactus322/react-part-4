@@ -3,11 +3,6 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
-    // Blog
-    //     .find({}).then((blogs) => {
-    //         response.json(blogs)
-    //     })
-
     const blogs = await Blog
         .find({}).populate('user', { username: 1, name: 1 })
 
@@ -17,7 +12,6 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
 
-    //придумать как сделать рандом
     const users = await User.find({})
     const random = Math.floor(Math.random() * users.length)
     const randomUser = users[random]
