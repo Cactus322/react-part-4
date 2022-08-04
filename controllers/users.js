@@ -42,7 +42,7 @@ usersRouter.post('/', async (request, response) => {
     const user = new User({
         username,
         name,
-        password,
+        passwordHash: password,
         blogs: randomBlog
     })
 
