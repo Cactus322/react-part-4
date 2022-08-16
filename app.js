@@ -7,7 +7,7 @@ const config = require('./utils/config')
 const blogRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
-const tokenExtractor = require('./utils/middleware')
+const { tokenExtractor } = require('./utils/middleware')
 
 mongoose.connect(config.MONGODB_URI)
     .then(() => {

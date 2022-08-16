@@ -3,6 +3,8 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
+let token = ''
 
 const initialBlogs = [
     {
@@ -23,12 +25,34 @@ const initialBlogs = [
     },
 ]
 
+beforeAll(async () => {
+    await User.deleteMany({})
+
+    await api
+        .post('/api/users')
+        .send({
+            username: 'Admin',
+            name: 'Michael Chan',
+            passwordHash: 'admin',
+        })
+})
+
 beforeEach(async () => {
     await Blog.deleteMany({})
+
     let blogObject = new Blog(initialBlogs[0])
     await blogObject.save()
     blogObject = new Blog(initialBlogs[1])
     await blogObject.save()
+
+    const response = await api
+        .post('/api/login')
+        .send({
+            username: 'Admin',
+            password: 'admin'
+        })
+
+    token = response.body.token
 })
 
 describe('other tests', () => {
@@ -54,8 +78,11 @@ describe('post valid', () => {
             likes: 10,
         }
 
+        console.log(token)
+
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -68,7 +95,7 @@ describe('post valid', () => {
         expect(titles).toContain(
             'First class tests'
         )
-    })
+    }, 15000)
 
     test('a valid likes', async () => {
         const newBlog = {
