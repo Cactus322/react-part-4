@@ -78,8 +78,6 @@ describe('post valid', () => {
             likes: 10,
         }
 
-        console.log(token)
-
         await api
             .post('/api/blogs')
             .set('Authorization', `Bearer ${token}`)
@@ -106,6 +104,7 @@ describe('post valid', () => {
 
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -125,6 +124,7 @@ describe('post valid', () => {
 
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
             .send(newBlog)
             .expect(400)
             .expect('Content-Type', /application\/json/)
@@ -143,7 +143,7 @@ describe('deletion valid', () => {
 
         expect(response.body).toHaveLength(initialBlogs.length - 1)
         expect(response.body).not.toContain(blogToDelete.title)
-    })
+    }, 15000)
 })
 
 describe('updation valid', () => {
