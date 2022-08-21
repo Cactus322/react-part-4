@@ -35,15 +35,6 @@ beforeAll(async () => {
             name: 'Michael Chan',
             passwordHash: 'admin',
         })
-})
-
-beforeEach(async () => {
-    await Blog.deleteMany({})
-
-    let blogObject = new Blog(initialBlogs[0])
-    await blogObject.save()
-    blogObject = new Blog(initialBlogs[1])
-    await blogObject.save()
 
     const response = await api
         .post('/api/login')
@@ -53,6 +44,26 @@ beforeEach(async () => {
         })
 
     token = response.body.token
+})
+
+beforeEach(async () => {
+    await Blog.deleteMany({})
+
+    const newBlog = {
+        title: 'React patterns',
+        author: 'Michael Chan',
+        url: 'https://reactpatterns.com/',
+        likes: 7,
+    }
+
+    await api
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newBlog)
+    // let blogObject = new Blog(initialBlogs[0])
+    // await blogObject.save()
+    // blogObject = new Blog(initialBlogs[1])
+    // await blogObject.save()
 })
 
 describe('other tests', () => {
@@ -133,36 +144,39 @@ describe('post valid', () => {
 
 describe('deletion valid', () => {
     test('succeeds delete', async () => {
-        const blogToDelete = initialBlogs[0]
+        const blogToDelete = await api
+            .get('/api/blogs')
 
         await api
-            .delete(`/api/blogs/${blogToDelete._id}`)
+            .delete(`/api/blogs/${blogToDelete.body[0].id}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect(204)
 
         const response = await api.get('/api/blogs')
 
-        expect(response.body).toHaveLength(initialBlogs.length - 1)
-        expect(response.body).not.toContain(blogToDelete.title)
+        expect(response.body).toHaveLength(blogToDelete.body.length - 1)
+        expect(response.body).not.toContain(blogToDelete.body[0].title)
     }, 15000)
 })
 
 describe('updation valid', () => {
     test('succeeds update', async () => {
-        const blogToUpdate = initialBlogs[0]
+        const blogToDelete = await api
+            .get('/api/blogs')
 
         const updateBlog = {
             likes: 3
         }
 
         await api
-            .put(`/api/blogs/${blogToUpdate._id}`)
+            .put(`/api/blogs/${blogToDelete.body[0].id}`)
             .send(updateBlog)
             .expect(200)
 
         const response = await api.get('/api/blogs')
         const likes = response.body.map(l => l.likes)
 
-        expect(response.body).toHaveLength(initialBlogs.length)
+        expect(response.body).toHaveLength(blogToDelete.body.length)
         expect(likes[0]).toBe(3)
     })
 })
