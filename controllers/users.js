@@ -5,7 +5,7 @@ const Blog = require('../models/blog')
 
 usersRouter.get('/', async (request, response) => {
     const users = await User
-        .find({}).populate('blogs')
+        .find({}).populate('blogs', {author: 1, title: 1, url: 1, likes: 1})
 
     response.json(users)
 })
@@ -18,7 +18,6 @@ usersRouter.post('/', async (request, response) => {
     const blogs = await Blog.find({})
     const random = Math.floor(Math.random() * blogs.length)
     const randomBlog = blogs[random]
-
 
     usernames.forEach(e => {
         if (e.username === username) {
@@ -43,7 +42,6 @@ usersRouter.post('/', async (request, response) => {
         username,
         name,
         passwordHash: password,
-        blogs: randomBlog
     })
 
     const savedUser = await user.save()
