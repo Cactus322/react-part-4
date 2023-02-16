@@ -3,7 +3,7 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJyciIsImlkIjoiNjJlYzM5NzdkZDBkYTVkZGJlZjllZDNhIiwiaWF0IjoxNjU5ODc5NzU1fQ.Ba-JxTqtKmK0DGZLHV1RyiieZY1ZXu15Ethn3kpWyrs
 
 {
-    "title": "Go To 6 Considered Harmful",
+    "title": "Go To 55 Considered Harmful",
     "author": "Edsger W. Dijkstra",
     "url": "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
     "likes": 5
@@ -26,8 +26,8 @@ POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
-    "username": "r2rr",
-    "name": "test",
+    "username": "r2rr4222",
+    "name": "test44",
     "passwordHash": "test"
 }
 
@@ -39,3 +39,14 @@ Content-Type: application/json
     "username": "r2rr",
     "password": "test"
 }
+
+###
+POST http://localhost:3003/api/blogs/62f16f80b040a678aad79859/comments
+Content-Type: application/json
+
+{
+    "text": "Awesome"
+}
+
+###
+DELETE  http://localhost:3003/api/blogs/62f16f80b040a678aad79859/comments/63ee4a3ee9387ee6f84fd531
