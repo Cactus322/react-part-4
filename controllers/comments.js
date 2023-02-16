@@ -3,12 +3,7 @@ const Comment = require('../models/comment')
 const Blog = require('../models/blog')
 
 commentsRouter.get('/:id/comments', async (request, response) => {
-	const comments = await Comment.find({}).populate('blog', {
-		author: 1,
-		title: 1,
-		url: 1,
-		likes: 1,
-	})
+	const comments = await Comment.find({})
 
 	response.json(comments)
 })
@@ -25,7 +20,6 @@ commentsRouter.post('/:id/comments', async (request, response) => {
 
     const comment = new Comment({
         text: body.text,
-        blog: blog._id
     })
 
     const saveComment = await comment.save()
